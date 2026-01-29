@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pastebin-Lite
 
-## Getting Started
+A minimal, resilient Pastebin-like application built with Next.js and PostgreSQL.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Create Pastes**: Share arbitrary text.
+- **Constraints**: Set Time-to-Live (TTL) and Maximum View Counts.
+- **Persistence**: Data is stored reliably in PostgreSQL.
+- **Resilience**: Handles high traffic and edge cases gracefully.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework**: Next.js (App Router)
+- **Language**: TypeScript
+- **Database**: PostgreSQL (via Prisma ORM)
+- **Validation**: Zod
+- **Styling**: Tailwind CSS
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Setup Instructions
 
-## Learn More
+1.  **Clone the repository:**
+    ```bash
+    git clone <your-repo-url>
+    cd pastebin-lite
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3.  **Configure Database:**
+    - Ensure you have a PostgreSQL database running.
+    - Copy `.env.example` to `.env` (or create `.env`) and set the `DATABASE_URL`:
+      ```env
+      DATABASE_URL="postgresql://user:password@localhost:5432/pastebin_lite?schema=public"
+      ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4.  **Run Migrations:**
+    ```bash
+    npx prisma migrate dev --name init
+    ```
 
-## Deploy on Vercel
+5.  **Run the Development Server:**
+    ```bash
+    npm run dev
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+6.  **Verify:**
+    - Visit `http://localhost:3000` to create a paste.
+    - Check `/api/healthz` for system status.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Testing
+
+For automated testing with deterministic time:
+- Set `TEST_MODE=1` in your environment.
+- Send requests with `x-test-now-ms` header to simulate time travel.
+
+## Persistence
+
+This project uses **PostgreSQL** for persistence to ensure data durability and consistency across requests. Redis was considered for TTL but Postgres handles relational data and ACID compliance better for this use case, and TTL can be efficiently indexed.
+# Pastebin
