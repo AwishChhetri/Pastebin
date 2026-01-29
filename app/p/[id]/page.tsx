@@ -20,7 +20,13 @@ export default function ViewPastePage() {
                 if (!res.ok) throw new Error(data.error || 'Paste not found');
                 setPaste(data);
             })
-            .catch((err: any) => setError(err.message))
+            .catch((err: unknown) => {
+                if (err instanceof Error) {
+                    setError(err.message);
+                } else {
+                    setError('An unexpected error occurred');
+                }
+            })
             .finally(() => setIsLoading(false));
     }, [id]);
 
